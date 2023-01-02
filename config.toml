@@ -2,7 +2,7 @@
 # languageCode = 'en-us'
 # title = 'My New Hugo Site'
 
-baseURL = "http://localhost:1313/"
+baseURL = "https://m-richards.github.io"
 languageCode = "en-au"
 defaultContentLanguage = "en"                             # en / zh-cn / ... (This field determines which i18n file to use)
 title = "Matt Richards - Blog"
