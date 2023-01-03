@@ -1,10 +1,11 @@
-______________________________________________________________________
+---
+title: "Getting into blogging"
+date: 2023-01-02T15:06:52+10:00
+draft: false
+categories:
+  - Meta posts
+---
 
-title: "Getting into blogging" date: 2023-01-02T15:06:52+10:00 draft: false categories:
-
-- Meta posts
-
-______________________________________________________________________
 
 Generally, I'm not one for cliches. I'm a full-time cynic, part-time pesimist and view New Years resolutions with a
 generous dose of skepticism, thinking most likely these are happy lies we tell ourselves to sleep better at night,
@@ -63,7 +64,7 @@ into. But I only have finite time, and this blog in itself isn't meant to be a h
 interesting things to look into in my spare time without going down the rabbit hole of learning a framework and
 toolchain that will be out of date within 6 months.
 
-The other non-goal which is clear to me is to preserve a perfect historical record for the world to see. I fully intend
+The other non-goal which is clear to me is to preserve a perfect historical record for the world to see (). I fully intend
 to go back and update posts I write with better descriptions, updated technology, corrections and elaborations. Where
 appropriate I'll acknowledge that the content has changed. Bearing in mind I am my primary audience (at least for now),
 I want this to be something I can refer to regularly, rather than a relic of things that might have been useful once
