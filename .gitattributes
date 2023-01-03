@@ -1,0 +1,2 @@
+*.sh		text eol=lf
+*.md		text eol=lf  # be consistent with mdformat
