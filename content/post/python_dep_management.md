@@ -1,8 +1,12 @@
 ---
-title: "Exploring the cross platform dependency management situation in Python"
+title: "Exploring the cross platform dependency management situation in Python - piptools"
 date: 2023-01-14T21:32:33+11:00
 draft: true
 ---
+
+*I've chosen to split this post into at least two parts, as the preamble to give context became a blog post in itself.
+So this first piece focuses the context around introducing stricter dependency management, and outlining the cracks that
+appear when trying to come up with a solution that works on multiple platforms.*
 
 Recently, I've been looking into transitioning a project (in this case, some transport model dev) from a heavy development
 into a production like state. The main goals of such a shift are to reduce inconsistencies between different developers,
@@ -45,11 +49,9 @@ jaxlib;sys_platform != "win32"
 jupyterlab>=3
 ```
 
-
-
 The packages in question are a little confected, but they illustrate the situation quite nicely. Jax is not supported
-on windows, so is listed with a platform constraint (our codebase is a mini-monolith at this point and so there portions which run quite happily on windows despite missing a "requirement"). `jupyterlab` is cross platform but have some windows specific dependencies which show up if I use `pip-compile`
-to generate a requirements file both linux and windows:
+on windows, so is listed with a platform constraint (our codebase is a mini-monolith at this point and so there portions which run quite happily on windows despite missing a "requirement"). `jupyterlab` is cross platform but has some windows specific dependencies which show up if I use `pip-compile`
+to generate a requirements file. Here's want that looks like if I compare the pip-compile output for linux and windows:
 
 ```bash
 $ pip-compile --no-annotate --output-file=requirements_windows.txt --resolver=backtracking requirements.in
@@ -78,100 +80,12 @@ the situation for windows dependencies is not so kind. `pywin32` and `pywinpty`,
 for linux, so the requirements file is not installable on linux.
 
 
-Realising this limitation of building a simple, clean process around piptools was a bit of a let down. I'd invested in some
-tooling precisely to avoid manually fiddling with requirements files. It also seemed to me to be a strange limitation,
+Realising this limitation of piptools was a bit of a let-down. I now had some nice clear easy to use tooling
+with an ugly manual hack to handle at the end. It also seemed to me to be a strange limitation,
 why would dependency resolution be dependent on the operating system? It seems like the metadata pip collates from
 `pyproject.toml`/ `setup.cfg` / `setup.py` around dependencies of a package should be queryable on any platform, even if its not installable on any package.
-That is what prompted this blog post and started me down this rabbit hole.
+That question is what prompted this blog post to see if there's a better answer than "it's not supported, cope".
 
-
-
-# Solutions
-
-
-## Quick and dirty
-The simplest solution is to essentially do what I've just done above to illustrate the problem. Run pip compile on WSL against
-a windows and linux virtualenv, merge the differences and manually propagate the platform markers. This is manual, error prone and requires either mutliple machines or a specific setup in wsl. Whilst this would be automatable to an extent it's possible to run into situations where for example, considering numpy as a transitive dependency, it ends up pinned to one release on windows, but then say jax imposes an additional constraint on linux and then you've got inconsistency between your dev and deploy environments (if it wasn't clear earlier, this is another downside of maintaining split requirements files per platform as pip tools suggests).
-
-Ideally, a solution would be constructed directly taking into account multiple platforms as part of a single solve. I thought
-it was worth taking a quick dive into the internals of pip-tools to work out why this isn't the case
-
-## Pip-tools dependency resolver
-<!-- TODO https://github.com/haideralipunjabi/hugo-shortcodes/tree/master/github, github shortcode -->
-It's not so tricky to peek under the covers of `pip-tools`. I cloned the repo and first started looking the console 
-script entry points for pip-sync and pip-compile. Here they are in the `pyproject.toml`:
-```toml
-[project.scripts]
-pip-compile = "piptools.scripts.compile:cli"
-pip-sync = "piptools.scripts.sync:cli"
-```
-Having a look inside (`scripts.compile.py`)[https://github.com/jazzband/pip-tools/blob/0c1ddcc6466c255675fa8b4f3db7d68f8808a74d/piptools/scripts/compile.py]
- we can see that that compile is built as a (`click`)[https://click.palletsprojects.com/en/8.1.x/] command line tool.
-
-To really understand what's going on, I'd like to replicate my original example and hook into it with a debugger,
-so I'm looking to call `pip-compile` programatically. Taking a look through the unit tests, I can see that piptools uses the `CliRunner` class 
-defined as a global fixture in `conftest.py`. It seems the simplest way to proceed is to hack into the tests as is. Modifying
-`test_cli_compile.py` I have a way in with a debugger:
-```python
-def test_entry_point(runner):
-    with open("requirements.in", "w") as f:
-        print('jaxlib;sys_platform != "win32"', file=f)
-        print('jupyterlab>=3', file=f)
-    runner.invoke(cli, ['requirements.in'])
-```
-
-Chopping out the relevant bits of `piptools.scripts.compile::cli`, we have
-```python
-repository: BaseRepository
-repository = PyPIRepository(pip_args, cache_dir=cache_dir)
-constraints: list[InstallRequirement] = []
-    for src_file in src_files:
-        constraints.extend(
-                parse_requirements(
-                    src_file,
-                    finder=repository.finder,
-                    session=repository.session,
-                    options=repository.options,
-                )
-            )
-```
-
-So `parse_requirements` is where the magic happens. If we look inside again, we see
-```python
-from pip._internal.req import InstallRequirement
-from pip._internal.req import parse_requirements as _parse_requirements
-def parse_requirements(
-    filename: str,
-    session: PipSession,
-    finder: PackageFinder | None = None,
-    options: optparse.Values | None = None,
-    constraint: bool = False,
-    isolated: bool = False,
-) -> Iterator[InstallRequirement]:
-    for parsed_req in _parse_requirements(
-        filename, session, finder=finder, options=options, constraint=constraint
-    ):
-        yield install_req_from_parsed_requirement(parsed_req, isolated=isolated)
-```
-
-which offers some clarity as to the underlying question about why this process is platform dependent. Piptools relies on
-pip for dependency resolution - and so it must be pip imposing this constraint. Stepping through the pip internals gets 
-a bit complicated, so sparing the gory details, in the end a function called `parse_req_from_line` parses a requirements
-file string like `jaxlib;sys_platform != "win32"` and splits that into a name, and a `Marker`, and then the name portion
-is further parsed into a `Requirement` consisting of a name, `SpecifierSet`(which contains the information on 
-versions after the relational operator) and Marker. Eventually this is all bundled up into an `InstallRequirement`
-along with a bunch of other metadata - and that forms the list of `constraints` up above.
-
-- invoke the pip resolver directly, discard packages from a requirements file in the same way that would happen for 
-installation
-
-
-
-# Approaches in other tools
-
-
-
-
-
-https://pdm.fming.dev/latest/usage/advanced/#export-requirementstxt-or-setuppy
-https://frostming.com/2021/03-26/pm-review-2021/
+The second part of this will dive deeper into the rabbit hole of why piptools works how it does, and whether my naive 
+expectation that this problem should be solvable stacks up. I also have a look at how some of the contemporaries to piptools behave
+in the same situation.
