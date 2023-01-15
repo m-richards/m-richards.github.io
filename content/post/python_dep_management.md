@@ -8,8 +8,8 @@ draft: true
 So this first piece focuses the context around introducing stricter dependency management, and outlining the cracks that
 appear when trying to come up with a solution that works on multiple platforms.*
 
-Recently, I've been looking into transitioning a project (in this case, some transport model dev) from a heavy development
-into a production like state. The main goals of such a shift are to reduce inconsistencies between different developers,
+Recently, I've been looking into transitioning a project (in this case, a large transport model dev codebase) from a heavy development
+cycle into a production like state. The main goals of such a shift are to reduce inconsistencies between different developers,
 their local hardware and the deployed environment where official results are produced. It's also a reflection of the 
 of the maturity of the project, a lot has changed over the course of two years of development. 
 
@@ -19,22 +19,27 @@ so I won't repeat what others have already said better (but if you are intereste
 strong opinions, I'd recommend 
 [Should You Use Upper Bound Version Constraints?](https://iscinumpy.dev/post/bound-version-constraints/) and 
 [Python Application Dependency Management](https://hynek.me/articles/python-app-deps-2018/) which I find rather compelling). 
-I elected to settle on [`piptools`](https://pip-tools.readthedocs.io/en/latest/) as it's relatively lightweight
+
+I've elected to proceed with [`piptools`](https://pip-tools.readthedocs.io/en/latest/) as it's relatively lightweight
 and just solves the dependency management/ lockfile problem I'm trying to solve and not 15 other things at the same time.
 
-I suppose I should also address another question which comes to mind. Why bother? Why go through the hassle of researching
-and setting up a tool when `pip freeze | requirements.txt` probably would have got me 4/5th of the way there? Working at a firm where most people would hesitate to call themselves software developers, this definitely would have been the path of least resistance. But there are a few key reasons that come to mind. To summarise these succinctly;
 
-* It is difficult to track transitive dependencies separately to direct dependencies
-  * In turn this makes it difficult to keep transitive deps up to date
-  * This also means one is less likely to get security patches in a timely fashion
+I suppose I should also address another question which comes to mind. Why bother? Why go through the hassle of researching
+and setting up a tool when `pip freeze | requirements.txt` probably would have got me four-fifths of the way there? Working at a firm where most people would hesitate to call themselves software developers, this definitely would have been the path of least resistance. But there are a few key reasons that come to mind. To summarise these succinctly;
+
+* It is difficult to track direct dependencies separate to transitive dependencies (the dependencies of your dependencies)
+  * In turn this makes it difficult to keep transitive dependencies up to date
+  * Consequently one is less likely to get security patches in a timely fashion
 * Determining if a dependency is no longer required becomes hard
 * The status quo becomes avoiding updating dependencies if at all possible (which is short sighted, but remains a tempting business decision in the world of consulting. )
 
-Collectively, these amount to the situation where either packages are almost never updated, or every request to update a package or refresh dependencies comes through me. Which is not a workflow I'm especially keen on supporting for the rest of time. Fortunately, through a combination of `pip-tools`
+Collectively, these amount to the situation where either packages are almost never updated, or every request to update a package or refresh dependencies comes to me, or was prompted by me in the first place. Not a workflow I'm especially keen on supporting until the end of time. Fortunately, through a combination of `pip-tools`
 some wrapper tooling, and a healthy amount of documentation I've managed to cobble together a solution which I'm optimistic
-will provide a simple way for the project team to interact with requirements files and avoid situations like working with
-`geopandas 0.5` in 2021.
+will provide a simple way for the project team to interact with requirements files themselves, and avoid situations like working with
+`geopandas 0.5` in 2021 (unfortunately no, I'm not making that up). Generally working with packages a little out of date isn't so bad,
+but geopandas pains me particularly, being involved in the development of it, and knowing significant re-architecting of the internals has 
+happened since to improve performance and generally be more robust. Not to mention and old version of it pulls in old versions
+of most of the python geospatial stack, which is notoriously difficult to install and work with, even at the best of times.
 
 
 # Cross platform dependencies - the problem
@@ -50,11 +55,12 @@ jupyterlab>=3
 ```
 
 The packages in question are a little confected, but they illustrate the situation quite nicely. Jax is not supported
-on windows, so is listed with a platform constraint (our codebase is a mini-monolith at this point and so there portions which run quite happily on windows despite missing a "requirement"). `jupyterlab` is cross platform but has some windows specific dependencies which show up if I use `pip-compile`
+on windows, so is listed with a platform constraint (our codebase is a mini-monolith at this point and so there portions which run quite happily on windows despite missing a "requirement". Technically we could have a plethora of requirements files for different bits of the code and then this "inconsistency" would disappear. But then I'd have a plethora of requirements to maintain which is certainly not the lesser evil). `jupyterlab` is a cross platform package but has some windows specific dependencies which show up if I use `pip-compile`
 to generate a requirements file. Here's want that looks like if I compare the pip-compile output for linux and windows:
 
 ```bash
 $ pip-compile --no-annotate --output-file=requirements_windows.txt --resolver=backtracking requirements.in
+# switching to WSL for linux results
 $ pip-compile --no-annotate --output-file=requirements_linux.txt --resolver=backtracking requirements.in
 $ git diff requirements_windows.txt requirements_linux.txt -U0
 ```
@@ -73,15 +79,17 @@ $ git diff requirements_windows.txt requirements_linux.txt -U0
 Firstly, its clear that results are platform dependent. This is clearly noted in the pip-tools documentation, along with
 the suggestion that one should have a requirements file per platform, python version, cpu type etc. This however isn't
 a solution that scales well, especially if one already has more than one target requirements file, which is not so
-unusual in the context of a repository. Secondly, we notice that the platform markers don't propagate. `jaxlib` pulled in 
+unusual in the context of a monolith. 
+
+Secondly, we notice that the platform markers don't propagate. `jaxlib` pulled in 
 `numpy`, `pexpect`, `ptyprocess` and `scipy`, without the restriction that these were transitive dependencies of a linux
 only package. Fortunately, these all install on windows (even if they're not intended for or tested on the platform) but 
 the situation for windows dependencies is not so kind. `pywin32` and `pywinpty`, these packages don't make sense nor exist
 for linux, so the requirements file is not installable on linux.
 
 
-Realising this limitation of piptools was a bit of a let-down. I now had some nice clear easy to use tooling
-with an ugly manual hack to handle at the end. It also seemed to me to be a strange limitation,
+Realising this limitation of piptools was a bit of a let-down. I now had some nice, clear, easy to use tooling
+with an ugly end step requiring manual intervention to merge OS specific files together. It also seemed to me to be a strange limitation,
 why would dependency resolution be dependent on the operating system? It seems like the metadata pip collates from
 `pyproject.toml`/ `setup.cfg` / `setup.py` around dependencies of a package should be queryable on any platform, even if its not installable on any package.
 That question is what prompted this blog post to see if there's a better answer than "it's not supported, cope".
