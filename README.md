@@ -8,11 +8,10 @@
 ```
 bash
 # if i remember before cloning
-git clone --recurse-submodules -j8 git@github.com:m-richards/m-richards.github.io.git
+git clone --recurse-submodules -j8 git@github.com:m-richards/m-richards.github.io.git blog
 cd bar
 #  For already cloned repos,
-git clone git@github.com:m-richards/m-richards.github.io.git
-cd bar
+cd themes/even
 git submodule update --init --recursive
 ```
 
