@@ -1,5 +1,5 @@
 ---
-title: "Exploring the cross platform dependency management situation in Python - piptools"
+title: "Exploring the cross platform dependency management situation in Python: piptools"
 date: 2023-01-14T21:32:33+11:00
 draft: false
 ---
@@ -55,7 +55,7 @@ jupyterlab>=3
 ```
 
 The packages in question are a little confected, but they illustrate the situation quite nicely. Jax is not supported
-on windows, so is listed with a platform constraint (our codebase is a mini-monolith at this point and so there portions which run quite happily on windows despite missing a "requirement". Technically we could have a plethora of requirements files for different bits of the code and then this "inconsistency" would disappear. But then I'd have a plethora of requirements to maintain which is certainly not the lesser evil). `jupyterlab` is a cross platform package but has some windows specific dependencies which show up if I use `pip-compile`
+on windows, so is listed with a platform constraint (our codebase consists of many related but independent pieces, so there portions which run quite happily on windows despite missing a "requirement". Technically we could have a plethora of requirements files for different bits of the code and then this "inconsistency" would disappear. But then I'd have a plethora of requirements to maintain which is certainly not the lesser evil). `jupyterlab` is a cross platform package but has some windows specific dependencies which show up if I use `pip-compile`
 to generate a requirements file. Here's want that looks like if I compare the pip-compile output for linux and windows:
 
 ```bash
@@ -78,8 +78,7 @@ $ git diff requirements_windows.txt requirements_linux.txt -U0
 
 Firstly, its clear that results are platform dependent. This is clearly noted in the pip-tools documentation, along with
 the suggestion that one should have a requirements file per platform, python version, cpu type etc. This however isn't
-a solution that scales well, especially if one already has more than one target requirements file, which is not so
-unusual in the context of a monolith. 
+a solution that scales well, especially if one already has more than one target requirements file. 
 
 Secondly, we notice that the platform markers don't propagate. `jaxlib` pulled in 
 `numpy`, `pexpect`, `ptyprocess` and `scipy`, without the restriction that these were transitive dependencies of a linux
