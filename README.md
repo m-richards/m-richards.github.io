@@ -18,7 +18,8 @@ git submodule update --init --recursive
 ### Linting
 ```
 bash
-pip install mdformat mdformat-frontmatter
+pipx install mdformat
+pipx inject mdformat mdformat-frontmatter
 mdformat content --wrap 120
 ```
 Note the frontmatter formatter only detects yaml, so unfortunately, that keeps me using yaml and not toml for the frontmatter
