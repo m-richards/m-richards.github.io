@@ -98,7 +98,8 @@ Essentially, this is due to historical reasons, where python dependency metadata
 executable, and there for can change at runtime. So for pip to know the dependencies associated with a package it has to
 install it - and to install it, it has to be installable on your platform - hence the idea of simulultaneously
 satisfying windows and linux constraints as part of a single solve doesn't make sense - at least in the pip
-universe\[^2\].
+universe\[^2\]. That's certainly not the fully story, as pypi also has a json api, [which is documented as part of warehouse](https://warehouse.pypa.io/api-reference/json.html),
+and for instance [`https://pypi.org/pypi/black/json`](https://pypi.org/pypi/black/json) contains `requires_dist` and `requires_python` fields. I'd like to look at this more when I have some more energy on this topic again.
 
 Going into this, I did not have any appreciation for the complexities involved in this process, but perhaps I could have
 taken a hint from Hatch, PDM, Poetry and pipenv all competing in a very similar space around python packaging. I had
