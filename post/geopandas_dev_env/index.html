@@ -14,7 +14,10 @@ biggest implicit assumption is that the default channel is conda-forge).</p><ol>
 enough to remember what the right invocation for the compile step is. This is my self reminder:</p><ol><li><code>cd</code> into pandas fork checkout. <code>git fetch upstream --tags</code> and <code>git merge upstream/main</code></li><li><code>git checkout main</code> and <code>git pull</code></li><li><code>python setup.py build_ext -j 4</code> - this should indicate it&rsquo;s cython-ising a bunch of things</li></ol><p>Note that this last on windows will often produce a bunch of warnings and sometime fail with exit code 1, even if it succeeds.</p><p>(Sometimes, I&rsquo;ve also had this stuck in a bad state and running <code>python setup.py develop</code> has gotten things back.)</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Matt Richards</span></p><p class=copyright-item><span class=item-title>LastMod</span>
 <span class=item-content>February 5, 2023
-<a href=/commit/4c9d244857d73bf27be32bae0cdac5cf755e57e4 title="new post">(4c9d244)</a></span></p></div><footer class=post-footer><nav class=post-nav><a class=next href=/post/python_dep_management2/><span class="next-text nav-default">Exploring the cross platform dependency management situation in Python - Part 2: piptools internals</span>
+<a href=/commit/4c9d244857d73bf27be32bae0cdac5cf755e57e4 title="new post">(4c9d244)</a></span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/using_ssh/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Remote Access with SSH Quickstart</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/python_dep_management2/><span class="next-text nav-default">Exploring the cross platform dependency management situation in Python - Part 2: piptools internals</span>
 <span class="next-text nav-mobile">Next</span>
 <i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/m-j-richards/ class="iconfont icon-linkedin" title=linkedin></a>
 <a href=https://github.com/m-richards class="iconfont icon-github" title=github></a>
