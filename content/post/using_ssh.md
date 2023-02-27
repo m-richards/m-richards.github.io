@@ -2,6 +2,9 @@
 title: "Remote Access with SSH Quickstart"
 date: 2023-02-06T20:20:25+11:00
 draft: false
+categories:
+  - Devops
+  - Teaching
 ---
 
 This is a post that I hope to be able to point someone to the next time I'm teaching someone how to ssh into a machine. I'm

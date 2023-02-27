@@ -2,6 +2,10 @@
 title: "Setting up a pandas/main environment for GeoPandas"
 date: 2023-02-05T18:05:38+11:00
 draft: false
+categories:
+  - Python
+  - Geospatial
+  - Teaching
 ---
 
 Although it's not something I tend to advertise very often, I'm a maintainer for [GeoPandas](https://github.com/geopandas/geopandas)

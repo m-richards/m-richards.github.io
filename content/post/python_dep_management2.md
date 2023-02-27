@@ -3,6 +3,9 @@ title: 'Exploring the cross platform dependency management situation in Python -
   2: piptools internals'
 date: 2023-01-15T21:45:40+11:00
 draft: false
+categories:
+  - Python
+  - Packaging
 ---
 
 This is a continuation of \[my previous post about `pip-tools`\]({{\< ref "python_dep_management.md" >}}), and the

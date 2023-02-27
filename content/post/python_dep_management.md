@@ -2,6 +2,9 @@
 title: 'Exploring the cross platform dependency management situation in Python: piptools'
 date: 2023-01-14T21:32:33+11:00
 draft: false
+categories:
+  - Python
+  - Packaging
 ---
 
 *I've chosen to split this post into at least two parts, as the preamble to give context became a blog post in itself.
