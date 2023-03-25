@@ -22,11 +22,11 @@ but slicing down to the bits I care about (and changing the bits I don't like).
 I've been using [mambaforge](https://github.com/conda-forge/miniforge#mambaforge) for environment management
 outside of work for quite a while, and these instructions are assuming that lightly (note, from normal conda, the 
 biggest implicit assumption is that the default channel is conda-forge). 
-
+1. Clone pandas `git clone git@github.com:<fork_author>/pandas` and `git remote add upstream git@github.com:pandas-dev/pandas`
 1. `cd` into pandas fork checkout. `git fetch upstream` and `git merge upstream/main`
 2. `git fetch --all --tags`. This is sometimes a gotcha when dealing with compatibility code based on pandas version. In a dev environment `pandas.__version__` is git aware.
 
-3. `mamba env create -n python=3.11 Cython versioneer pytest pytest-xdist numpy python-dateutil pytz matplotlib pyarrow scipy`, I use this manual list as the `environment.yml` has a zoo of optional dependencies I don't overly care about from a GeoPandas context, and I'd rather use a python more recent than 3.8. 
+3. `mamba env create -n <dev_env_name> python=3.11 Cython versioneer pytest pytest-xdist numpy python-dateutil pytz matplotlib pyarrow scipy`, I use this manual list as the `environment.yml` has a zoo of optional dependencies I don't overly care about from a GeoPandas context, and I'd rather use a python more recent than 3.8. 
 4. `mamba activate pandas-dev`
 5. `python setup.py build_ext -j 4` (build the cython extension modules, with 4 cores)
 6. `python -m pip install -e . --no-build-isolation --no-use-pep517`
