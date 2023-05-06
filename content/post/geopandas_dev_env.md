@@ -26,14 +26,16 @@ biggest implicit assumption is that the default channel is conda-forge).
 1. `cd` into pandas fork checkout. `git fetch upstream` and `git merge upstream/main`
 2. `git fetch --all --tags`. This is sometimes a gotcha when dealing with compatibility code based on pandas version. In a dev environment `pandas.__version__` is git aware.
 
-3. `mamba env create -n <dev_env_name> python=3.11 Cython versioneer pytest pytest-xdist numpy python-dateutil pytz matplotlib pyarrow scipy`, I use this manual list as the `environment.yml` has a zoo of optional dependencies I don't overly care about from a GeoPandas context, and I'd rather use a python more recent than 3.8. 
+3. `mamba env create -n {dev_env_name} python=3.11 Cython versioneer pytest pytest-xdist numpy python-dateutil pytz matplotlib pyarrow scipy numpy`, I use this manual list as the `environment.yml` has a zoo of optional dependencies I don't overly care about from a GeoPandas context, and I'd rather use a python more recent than 3.8. 
 4. `mamba activate pandas-dev`
 5. `python setup.py build_ext -j 4` (build the cython extension modules, with 4 cores)
 6. `python -m pip install -e . --no-build-isolation --no-use-pep517`
+7. `pre-commit install` (technically optional if only working on geopandas)
 
 ## Add GeoPandas on top
 1. `mamba install -y fiona pyproj shapely pyogrio black pre-commit ipython jupyterlab`
 2. cd to geopandas fork dir and `python -m pip install -e .`
+3. `pre-commit install`
 
 At this point, if I've done everything right, I should be able to run the geopandas test suite mostly successfully.
 
