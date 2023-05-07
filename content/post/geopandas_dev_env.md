@@ -53,19 +53,25 @@ Note that this last on windows will often produce a bunch of warnings and someti
 (Sometimes, I've also had this stuck in a bad state and running `python setup.py develop` has gotten things back. This should be mostly equivalent to the pip install editable though)
 
 
-# Extra: pyogrio dev env on windows.
+# Extra: pyogrio dev env on windows with OSGeo4W.
 These are my notes on installing pyogrio from source on windows, which flesh out the notes in (the docs)[https://pyogrio.readthedocs.io/en/latest/install.html#windows].
-They originally lived in a gist and were written for anaconda in powershell, but more or less translate directly to bash:
->   1. Download OSGeo4W network installer https://www.qgis.org/en/site/forusers/download.html
->   2. (As administrator) run installer for all users, install gdal and gdal-devel (header files, populates the \include dir)
->   3. Open anaconda prompt
->   4. `conda create -n pyogrio_dev python=3.11 pandas shapely fiona Cython`
->   5. `conda activate pyogrio_dev`
->   6. `$env:GDAL_VERSION="3.5.1"` # or whatever gdalinfo --version returns / whatever you installed with OSGeo4W (passing this to --install-option didn't seem to work)
->   7. Switch to dir containing checkoutof pyogrio
->   8. `python -m pip install --install-option=build_ext --install-option="-IC:\OSGeo4W\include" --install-option="-lgdal_i" --install-option="-LC:\OSGeo4W\lib" --no-deps --no-use-pep517 -e . -v`
->   9. `$env:GDAL_VERSION="3.5.1"`, `$env:GDAL_LIBRARY_PATH="C:\OSGeo4W\lib"`, `$env:GDAL_INCLUDE_PATH="C:\OSGeo4W\include"`
->   10. `python setup.py develop`
+I've done this most recently with GDAL 3.6.4 from OSGeo4W with QGIS 3.30, but also with GDAL 3.5.1 in the past.
+
+
+1. Download OSGeo4W network installer https://www.qgis.org/en/site/forusers/download.html
+2. (As administrator) run installer for all users, install gdal and gdal-devel (the latter adds header files and populates the \include dir)
+3. Create conda env `conda create -n pyogrio_dev python=3.11 pandas shapely Cython pyproj ipython pytest`. (**Do not install fiona!** - this will cause DLL loading errors from the conflicting versions of GDAL. Perhaps this can work if building fiona from source as well, but i haven't tried.)
+5. Activate the environment: `conda activate pyogrio_dev`
+6. In OSGeo4W shell, run `gdalinfo --version` we need to know the version of GDAL to pass to the installler.
+7. Switch to dir containing checkout of pyogrio
+8. Install pyogrio `python -m pip install --install-option=build_ext --install-option="-IC:\OSGeo4W\include" --install-option="-lgdal_i" --install-option="-LC:\OSGeo4W\lib" --no-deps --no-use-pep517 --install-option=--gdalversion --install-option=3.6.4 -e . -v` (where you replace 3.6.4 with whatever version of gdal is reported by gdalinfo). Note this looks a bit odd supplying `--gdalversion` and `3.6.4` separately, but the pyogrio setup code looks specifically for the key `--gdalversion`, so we have to pass these as two consecutive arguments.
+9. Alternatively, set environment variables `$env:GDAL_VERSION="3.6.4"; $env:GDAL_LIBRARY_PATH="C:\OSGeo4W\lib"; $env:GDAL_INCLUDE_PATH="C:\OSGeo4W\include"` and run `python -m pip install --no-deps --force-reinstall --no-use-pep517 -e . -v`
+10. You might have to set the environment variable `GDAL_DATA`. I've now set this to `$env:GDAL_DATA="C:\OSGeo4W\apps\gdal\share\gdal"`, but I remember this "just working" in the past.
+11. If everything has gone well, importing pyogrio will work and the tests will pass when run.
+
+## pip 23.1 compatibility
+In pip 23.1, the `--install-option` flag in pip was removed. For now, it seems that using `--config-settings` (the apparent replace) doesn't behave. 
+Instead, supply the environment variables as in (9). There's potentially some work to do on the packaging of pyogrio to make this a little easier, but not a packaging expert.
 
 
 
