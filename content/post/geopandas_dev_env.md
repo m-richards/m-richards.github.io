@@ -45,10 +45,29 @@ enough to remember what the right invocation for the compile step is. This is my
 1. `cd` into pandas fork checkout. `git fetch upstream --tags` and `git merge upstream/main`
 2. `git checkout main` and `git pull`
 3. `python setup.py build_ext -j 4` - this should indicate it's cython-ising a bunch of things
-
 Note that this last on windows will often produce a bunch of warnings and sometime fail with exit code 1, even if it succeeds.
+5. `python -m pip install -e . --no-build-isolation --no-use-pep517`
 
-(Sometimes, I've also had this stuck in a bad state and running `python setup.py develop` has gotten things back.)
+
+
+(Sometimes, I've also had this stuck in a bad state and running `python setup.py develop` has gotten things back. This should be mostly equivalent to the pip install editable though)
+
+
+# Extra: pyogrio dev env on windows.
+These are my notes on installing pyogrio from source on windows, which flesh out the notes in (the docs)[https://pyogrio.readthedocs.io/en/latest/install.html#windows].
+They originally lived in a gist and were written for anaconda in powershell, but more or less translate directly to bash:
+>   1. Download OSGeo4W network installer https://www.qgis.org/en/site/forusers/download.html
+>   2. (As administrator) run installer for all users, install gdal and gdal-devel (header files, populates the \include dir)
+>   3. Open anaconda prompt
+>   4. `conda create -n pyogrio_dev python=3.11 pandas shapely fiona Cython`
+>   5. `conda activate pyogrio_dev`
+>   6. `$env:GDAL_VERSION="3.5.1"` # or whatever gdalinfo --version returns / whatever you installed with OSGeo4W (passing this to --install-option didn't seem to work)
+>   7. Switch to dir containing checkoutof pyogrio
+>   8. `python -m pip install --install-option=build_ext --install-option="-IC:\OSGeo4W\include" --install-option="-lgdal_i" --install-option="-LC:\OSGeo4W\lib" --no-deps --no-use-pep517 -e . -v`
+>   9. `$env:GDAL_VERSION="3.5.1"`, `$env:GDAL_LIBRARY_PATH="C:\OSGeo4W\lib"`, `$env:GDAL_INCLUDE_PATH="C:\OSGeo4W\include"`
+>   10. `python setup.py develop`
+
+
 
 
 
