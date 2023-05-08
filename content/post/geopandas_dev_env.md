@@ -60,7 +60,7 @@ I've done this most recently with GDAL 3.6.4 from OSGeo4W with QGIS 3.30, but al
 
 1. Download OSGeo4W network installer https://www.qgis.org/en/site/forusers/download.html
 2. (As administrator) run installer for all users, install gdal and gdal-devel (the latter adds header files and populates the \include dir)
-3. Create conda env `conda create -n pyogrio_dev python=3.11 pandas shapely Cython pyproj ipython pytest`. (**Do not install fiona!** - this will cause DLL loading errors from the conflicting versions of GDAL. Perhaps this can work if building fiona from source as well, but i haven't tried.)
+3. Create conda env `conda create -n pyogrio_dev python=3.11 pandas shapely Cython pyproj ipython pytest pyarrow`. (**Do not install fiona!** - this will cause DLL loading errors from the conflicting versions of GDAL. Perhaps this can work if building fiona from source as well, but i haven't tried.)
 5. Activate the environment: `conda activate pyogrio_dev`
 6. In OSGeo4W shell, run `gdalinfo --version` we need to know the version of GDAL to pass to the installler.
 7. Switch to dir containing checkout of pyogrio
