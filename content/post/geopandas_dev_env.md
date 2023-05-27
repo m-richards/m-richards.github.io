@@ -54,13 +54,14 @@ Note that this last on windows will often produce a bunch of warnings and someti
 
 
 # Extra: pyogrio dev env on windows with OSGeo4W.
+*After experimenting with this, I've reverted to using WSL as it seems less flaky overall, ended up with a broken environment down the track and not exactly sure why*
 These are my notes on installing pyogrio from source on windows, which flesh out the notes in (the docs)[https://pyogrio.readthedocs.io/en/latest/install.html#windows].
 I've done this most recently with GDAL 3.6.4 from OSGeo4W with QGIS 3.30, but also with GDAL 3.5.1 in the past.
 
 
 1. Download OSGeo4W network installer https://www.qgis.org/en/site/forusers/download.html
 2. (As administrator) run installer for all users, install gdal and gdal-devel (the latter adds header files and populates the \include dir)
-3. Create conda env `conda create -n pyogrio_dev python=3.11 pandas shapely Cython pyproj ipython pytest pyarrow`. (**Do not install fiona!** - this will cause DLL loading errors from the conflicting versions of GDAL. Perhaps this can work if building fiona from source as well, but i haven't tried.)
+3. Create conda env `conda create -n pyogrio_dev python=3.11 pandas shapely Cython pyproj ipython pytest pyarrow versioneer`. (**Do not install fiona!** - this will cause DLL loading errors from the conflicting versions of GDAL. Perhaps this can work if building fiona from source as well, but i haven't tried.)
 5. Activate the environment: `conda activate pyogrio_dev`
 6. In OSGeo4W shell, run `gdalinfo --version` we need to know the version of GDAL to pass to the installler.
 7. Switch to dir containing checkout of pyogrio
@@ -72,6 +73,15 @@ I've done this most recently with GDAL 3.6.4 from OSGeo4W with QGIS 3.30, but al
 ## pip 23.1 compatibility
 In pip 23.1, the `--install-option` flag in pip was removed. For now, it seems that using `--config-settings` (the apparent replace) doesn't behave. 
 Instead, supply the environment variables as in (9). There's potentially some work to do on the packaging of pyogrio to make this a little easier, but not a packaging expert.
+
+# Extra: pyogrio linux install
+1. conda env `mamba create -n pyogrio_dev python=3.11 pandas shapely Cython pyproj ipython pytest pyarrow versioneer gdal`
+2. clone pyogrio & fetch tags
+3. Get us a GDAL to build against:
+   * Using apt: `sudo apt install gdal-bin` and `sudo apt-get install libgdal-dev`
+   * Using conda: *I'm yet to actually test this directly because it seems to require there to not be a system GDAL / system GDAL not on path, and I can't do that without breaking my existing environment*. Originally I presumed this wouldn't install the requisite header files to build other packages against, but pyogrio does this in its CI. In theory though, this is great because you're not tied to the version of GDAL bundled into debian stable, and don't have to updated ubuntu to get a new version of GDAL. `mamba install gdal`
+5. `python setup.py develop`
+6. `pip install --no-deps geopandas` - don't want to install fiona which has another version of GDAL bundled into the wheel (could perhaps use conda/ mamba to install this too)
 
 
 
