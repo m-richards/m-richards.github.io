@@ -37,8 +37,8 @@ recommendations, and then an example of how to enact them:
 3. **When your environment is working, serialise it.** Don't end up in the situation where you've finally got everything
    working, you install something else and everything spontaneously combusts. (This hasn't happened to me in a long
    time, but it really sucks when it does, and avoiding it is pretty easy). Run `conda activate <envname>` and
-   `conda env export > "<env_name.yml>" to create a YAML encoding dependencies. Then commit this! Don't make someone else have to rediscover what a working environment looks like. the `--from-history`flag can also be used in`conda
-   env export\` to ignore transitive dependencies, which might be handy in particular if dependencies are different on
+   `conda env export > "<env_name.yml>"` to create a YAML encoding dependencies (in the current working directory). Then commit this file! Don't make someone else have to rediscover what a working environment looks like. the `--from-history` flag can also be used in `conda
+   env export` to ignore transitive dependencies, which might be handy in particular if dependencies are different on
    different platforms.
 4. **Don't mix pip and conda unless you have to**. If you have to (a package isn't available on conda-forge) the
    recommendation is to only use pip from that point forward. The two ways of installing packages work in different ways
@@ -50,10 +50,10 @@ recommendations, and then an example of how to enact them:
    - If a pip style `*.txt` exists, use `conda create -n <ENVNAME> --file <ENV_FILENAME>.txt`
    - If a conda YAML exists use `conda env create -n <ENVNAME> --file <ENV_FILENAME>.yml`
 
-## A pratical example
+## A practical example
 
-I've looked at some code for which no one left a helpful `requirements.txt`, so we have to re-create the environment
-based upon imports. I can see that gdal is required, so I'll include that in creating the environment, along with a
+I've recently been through this process for a repository where no one left a helpful `requirements.txt` to get us started with. Instead, we have to re-create the environment
+based upon imports in the code or other detective work. I can see that gdal is required, so I'll include that in creating the environment, along with a
 couple of other packages that I'll likely need as well. Ideally, I'd know exactly what packages are required so conda
 can resolve everything in one step, but that's not always an option.
 
@@ -68,6 +68,7 @@ part.) Then activate the environment to attempt to run the notebook in the repos
 conda activate <my_env_name>
 jupyter lab
 ```
+Activating the environment is important - we want jupyter lab to use the environment with dependencies. (There's also [nb-conda-kernels](https://github.com/Anaconda-Platform/nb_conda_kernels) that's supposed to let you keep jupyterlab in one place only, but I've been burnt by this not working and not loading DLLs in the past)
 
 Later we discovered we needed a pip package `pygdaltools`, so we installed that as well,
 
