@@ -31,7 +31,7 @@ assumption is that the default channel is conda-forge).
 5. `mamba activate pandas_dev_meson`
 6. Now we need to invoke meson, I had this crash weirdly, not exactly sure what I needed to remove, but this should be sufficient. Make sure no local changes in git and then 
     run `rm pandas/_libs/*.pyx`, `rm pandas/_libs/*.pxi` `rm pandas/_libs/*.pyd` and `rm pandas/_libs/*.c`. This will remove some code we actually need, so run `git checkout .` to restore the missing files from the index.
-7. `pip install -ve . --no-build-isolation --config-settings builddir="builddir"`. If  debug symbols are needed, then apparently `pip install -ve . --no-build-isolation --config-settings builddir="builddir" --config-settings setup-args="-Dbuildtype=debug"` is the magic invocation.
+7. `pip install -ve . --no-build-isolation --config-settings builddir="builddir" --config-settings editable-verbose=true`. If  debug symbols are needed, then apparently `pip install -ve . --no-build-isolation --config-settings builddir="builddir" --config-settings setup-args="-Dbuildtype=debug"` is the magic invocation. Note the flag `--config-settings editable-verbose=true` shows output when importing pandas and a rebuild of the underlying extensions is triggered.
 9.  `pre-commit install` (technically optional if only working on geopandas)
 One significant change of the new build backend is that in editable mode, cython extensions will automatically be re-built at import time, meaning you don't have to compile
 
