@@ -25,5 +25,6 @@ Rather than do any kind of summary of the guide, I thought I'd just make some no
 - (Avoid changing state)[https://learn.scientific-python.org/development/principles/design/#avoid-changing-state]. This a real nice simple example of a good alternative to creating a "wonder class" which does everything for you conveniently, if you correctly call all the methods the right order.
 - Some nice words about how (flexibility is not always a good thing)[https://learn.scientific-python.org/development/principles/design/#complexity-is-always-conserved]
 - (What to put in documentation)[https://learn.scientific-python.org/development/guides/docs/#what-to-include], with some grounding in the so-called "Diataxis framework" which justifies this structure.
+- Specific guidance on how to go about [introducing typing gradually](https://learn.scientific-python.org/development/guides/style/#type-checking) to an existing codebase
 
 
