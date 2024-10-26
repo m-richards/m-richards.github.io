@@ -1,0 +1,91 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Improving the Jupyterlab IDE experience - Matt Richards - Blog</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="Matt Richards"><meta name=description content="Periodically I find myself switching back and forth between different and editors and workflows to try and be the most productive, depending on what kind of work I&amp;rsquo;m doing. Usually when in python, that involves some variation of writing python libraries / modules and exploratory development in jupyter notebooks of some kind. The goal is to try and minimise the friction encountered working between different sources. These are the combinations I&amp;rsquo;ve tried over the last couple of years:"><meta name=keywords content="blog,geospatial,software,transport"><meta name=generator content="Hugo 0.109.0 with theme even"><link rel=canonical href=https://m-richards.github.io/post/jupyterlab_formatter/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Improving the Jupyterlab IDE experience"><meta property="og:description" content="Periodically I find myself switching back and forth between different and editors and workflows to try and be the most productive, depending on what kind of work I&rsquo;m doing. Usually when in python, that involves some variation of writing python libraries / modules and exploratory development in jupyter notebooks of some kind. The goal is to try and minimise the friction encountered working between different sources. These are the combinations I&rsquo;ve tried over the last couple of years:"><meta property="og:type" content="article"><meta property="og:url" content="https://m-richards.github.io/post/jupyterlab_formatter/"><meta property="article:section" content="post"><meta property="article:published_time" content="2024-10-26T14:13:07+11:00"><meta property="article:modified_time" content="2024-04-08T19:49:26+10:00"><meta itemprop=name content="Improving the Jupyterlab IDE experience"><meta itemprop=description content="Periodically I find myself switching back and forth between different and editors and workflows to try and be the most productive, depending on what kind of work I&rsquo;m doing. Usually when in python, that involves some variation of writing python libraries / modules and exploratory development in jupyter notebooks of some kind. The goal is to try and minimise the friction encountered working between different sources. These are the combinations I&rsquo;ve tried over the last couple of years:"><meta itemprop=datePublished content="2024-10-26T14:13:07+11:00"><meta itemprop=dateModified content="2024-04-08T19:49:26+10:00"><meta itemprop=wordCount content="596"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Improving the Jupyterlab IDE experience"><meta name=twitter:description content="Periodically I find myself switching back and forth between different and editors and workflows to try and be the most productive, depending on what kind of work I&rsquo;m doing. Usually when in python, that involves some variation of writing python libraries / modules and exploratory development in jupyter notebooks of some kind. The goal is to try and minimise the friction encountered working between different sources. These are the combinations I&rsquo;ve tried over the last couple of years:"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Matt's Musings</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Matt's Musings</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Improving the Jupyterlab IDE experience</h1><div class=post-meta><span class=post-time>October 26, 2024</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents></nav></div></div><div class=post-content><p>Periodically I find myself switching back and forth between different and editors and workflows to try and be the most
+productive, depending on what kind of work I&rsquo;m doing. Usually when in python, that involves some variation of writing
+python libraries / modules and exploratory development in jupyter notebooks of some kind. The goal is to try and
+minimise the friction encountered working between different sources. These are the combinations I&rsquo;ve tried over the
+last couple of years:</p><ul><li>Jupyterlab for notebooks, pycharm for python files</li><li>Pycharm Pro for both</li><li>Jupyterlab for running notebooks, paired with jupytext python files for refactoring in pycharm</li><li>VSCode + Jupyterlab</li><li>VSCode + inbuild notebook support</li></ul><p>In principle pycharm pro should have been great, as allowing go to definition + navigating back and forth across
+notebooks and scripts is super convenient, but it&rsquo;s always been not quite as fluid as it should be.
+The remote development support also is still maturing, even after several years of beta support.</p><p>I then switched to VSCode for remote development and in general quite like working with it. However,
+I seem to be fighting it more often than I should be to have all the features I want. The way that the plugins are configured
+I always seem to be at ~80% of what I want working, even though I manage my vscode setting through dotfiles. Right now,
+I&rsquo;ve finally gotten notebook code formatting via black working, but I&rsquo;m missing documentation previews on methods,
+which means I have to interrupt my workflow to go look up api documentation to work out what that parameter was called.
+At the moment it also doesn&rsquo;t seem to be coping super well with virtualenv discovery, now that <a href=https://github.com/astral-sh/uv>uv</a>
+has made virtualenvs super cheap and easy.</p><p>So I&rsquo;ve come full circle and am now trying out jupyterlab some more again - but with the workflow extensions it needs to
+be competitive. I remember back first using jupyter notebooks and seeking out the <a href=https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/hinterland/README.html>hinterland plugin</a> for automatic autocomplete. I&rsquo;ve checked in with
+the jupyterlab equivalents via the jupyter language server a few times over the years - I used the jedi language server
+a lot back in 2022 but this is my first recent foray into what coming up with a good setup looks like. These notes
+are all made after a quick morning of experimenting, but I expect I&rsquo;ll come back to update them over time.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>uv init
+</span></span><span class=line><span class=cl><span class=c1># set up the rest of your environment with uv</span>
+</span></span><span class=line><span class=cl>uv add jupyterlab-lsp python-lsp-server python-lsp-ruff jupytext add jupyterlab-code-formatter ruff
+</span></span><span class=line><span class=cl>uv run jupyter lab
+</span></span></code></pre></td></tr></table></div></div><p>Now in the jupyterlab settings menu (settings -> settings editor -> json settings editor)</p><ul><li>In both code completion tabs (two different icons) enable continuous hinting/ autocompletion</li><li>In the jupyterlab code formatter, paste something like this:</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>{
+</span></span><span class=line><span class=cl>  &#34;formatOnSave&#34;: true,
+</span></span><span class=line><span class=cl>  &#34;preferences&#34;: {
+</span></span><span class=line><span class=cl>        &#34;default_formatter&#34;: {
+</span></span><span class=line><span class=cl>            &#34;python&#34;: &#34;ruffformat&#34;,
+</span></span><span class=line><span class=cl>            &#34;R&#34;: &#34;styler&#34;
+</span></span><span class=line><span class=cl>        }
+</span></span><span class=line><span class=cl>    },
+</span></span><span class=line><span class=cl>    // Command line options to be passed to ruff format.
+</span></span><span class=line><span class=cl>    &#34;ruffformat&#34;: {
+</span></span><span class=line><span class=cl>        &#34;args&#34;: [&#34;--line-length&#34;, &#34;120&#34;]
+</span></span><span class=line><span class=cl>    },
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><ul><li>In the keyboard shortcuts section, add something like this to the shortcuts list:</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>,
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>          &#34;command&#34;: &#34;jupyterlab_code_formatter:format&#34;,
+</span></span><span class=line><span class=cl>          &#34;keys&#34;: [
+</span></span><span class=line><span class=cl>            &#34;Ctrl M&#34;,
+</span></span><span class=line><span class=cl>            &#34;B&#34;
+</span></span><span class=line><span class=cl>          ],
+</span></span><span class=line><span class=cl>          &#34;selector&#34;: &#34;.jp-Notebook.jp-mod-editMode&#34;
+</span></span><span class=line><span class=cl>        }
+</span></span></code></pre></td></tr></table></div></div><p>This binds &ldquo;format this cell&rdquo; to the chord Ctrl M + B.</p><p>There&rsquo;s also a circle icon to the right of the cell type which will format the whole notebook (maybe I&rsquo;ll come back at some
+point and fill in some screenshots, post is more so I don&rsquo;t forget for the moment).</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>Matt Richards</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>April 8, 2024
+<a href=/commit/3722f37a9e06b1fe50d7b1f7fcc79b374feeaf98 title="fix image">(3722f37)</a></span></p></div><footer class=post-footer><nav class=post-nav><a class=next href=/post/til_001/><span class="next-text nav-default">TIL Setting IP Adresses for AWS</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://www.linkedin.com/in/m-j-richards/ class="iconfont icon-linkedin" title=linkedin></a>
+<a href=https://github.com/m-richards class="iconfont icon-github" title=github></a>
+<a href=https://m-richards.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a></span>
+<span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2023 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>Matt Richards</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script></body></html>
