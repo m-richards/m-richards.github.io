@@ -36,11 +36,17 @@ are all made after a quick morning of experimenting, but I expect I'll come back
 ```bash
 uv init
 # set up the rest of your environment with uv
-uv add jupyterlab-lsp python-lsp-server python-lsp-ruff jupytext add jupyterlab-code-formatter ruff
+uv add jupyterlab-lsp python-lsp-server python-lsp-ruff jupytext jupyterlab-code-formatter ruff
 uv run jupyter lab
 ```
 Now in the jupyterlab settings menu (settings -> settings editor -> json settings editor)
-- In both code completion tabs (two different icons) enable continuous hinting/ autocompletion
+- In both code completion tabs (two different icons) enable continuous hinting/ autocompletion:
+
+![](jupyterlab_code_completion_1.png)
+
+<img style="display: block; margin: auto;" src="jupyterlab_code_completion_2.png"/>
+<!-- ![](jupyterlab_code_completion_2.png) -->
+
 - In the jupyterlab code formatter, paste something like this:
 ```jsonc
 {
@@ -72,6 +78,7 @@ Now in the jupyterlab settings menu (settings -> settings editor -> json setting
 ```
 This binds "format this cell" to the chord Ctrl M + B.
 
-There's also a circle icon to the right of the cell type which will format the whole notebook (maybe I'll come back at some
-point and fill in some screenshots, post is more so I don't forget for the moment).
+There's also a circle icon to the right of the cell type which will format the whole notebook:
+![](jupyterlab_code_formatter_icon.png)
+
 
