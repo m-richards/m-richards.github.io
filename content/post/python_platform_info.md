@@ -37,6 +37,11 @@ platform.uname()
 uname_result(system='Windows', node='<machine name I am using>', release='10', version='10.0.26100', machine='AMD64')
 platform.python_implementation()
 'CPython'
+platform.machine()
+'AMD64'
+platform.system()
+'Windows'
+
 ```
 
 And on the version of WSL I have sitting around
@@ -58,6 +63,11 @@ And on the version of WSL I have sitting around
 uname_result(system='Linux', node='<machine name I am using>', release='5.15.167.4-microsoft-standard-WSL2', version='#1 SMP Tue Nov 5 00:21:55 UTC 2024', machine='x86_64')
 >>> platform.python_implementation()
 'CPython'
+>>>
+>>> platform.machine()
+'x86_64'
+>>> platform.system()
+'Linux'
 >>>
 ```
 
